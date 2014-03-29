@@ -1,12 +1,15 @@
 module.exports = function Spy(target, method) {
 	var origFn = target[method]
-	this.count = 0;
-	var self = this;
-	return function() {
-		origFn.apply(null, Array.prototype.slice(arguments))
-		count++;
+	var result = {
+		count: 0
 	}
-	this.count = count
+	// var counter = 0;
+	// instantiating a variable wont work because
+	// objects/arrays/functions are passed by reference, everything else by value.
+	target[method] = function(){
+		result.count++;
+		return origFn.apply(this, arguments)
+	}
 
-
+	return result
 };
